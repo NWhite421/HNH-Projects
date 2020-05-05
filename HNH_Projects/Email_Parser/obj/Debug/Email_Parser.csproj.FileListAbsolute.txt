@@ -1,0 +1,12 @@
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\Email_Parser.exe.config
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\Email_Parser.exe
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\Email_Parser.pdb
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\MDG.Core.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csprojAssemblyReference.cache
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.Form1.resources
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.Properties.Resources.resources
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.GenerateResource.cache
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.CoreCompileInputs.cache
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.CopyComplete
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.exe
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.pdb
