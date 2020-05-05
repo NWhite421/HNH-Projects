@@ -10,3 +10,15 @@ E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.C
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.CopyComplete
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.exe
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.pdb
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\Email_Parser.exe.config
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\Email_Parser.exe
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\Email_Parser.pdb
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\MDG.Core.dll
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csprojAssemblyReference.cache
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.MainForm.resources
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.Properties.Resources.resources
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.SubmitInfo.resources
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.GenerateResource.cache
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.CopyComplete
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.exe
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.pdb
