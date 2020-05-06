@@ -22,3 +22,16 @@ C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Pars
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.CopyComplete
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.exe
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.pdb
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.CoreCompileInputs.cache
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\MsgReader.dll
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\OpenMcdf.dll
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\RtfPipe.dll
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\MsgReader.xml
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\OpenMcdf.xml
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\de\MsgReader.resources.dll
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\es\MsgReader.resources.dll
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\fr\MsgReader.resources.dll
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\nl\MsgReader.resources.dll
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\pt\MsgReader.resources.dll
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\zh-CN\MsgReader.resources.dll
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\zh-TW\MsgReader.resources.dll

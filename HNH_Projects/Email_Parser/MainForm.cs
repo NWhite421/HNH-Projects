@@ -12,6 +12,8 @@ using iwantedue.Windows.Forms;
 using iwantedue;
 using System.IO;
 using System.Diagnostics;
+using MsgReader;
+using MsgReader.Outlook;
 
 namespace Email_Parser
 {
@@ -28,6 +30,108 @@ namespace Email_Parser
             e.Effect = DragDropEffects.All;
         }
 
+        private void HandleEmailParse(MemoryStream filestream)
+        {
+            OutlookStorage.Message message = new OutlookStorage.Message(filestream);
+            var parts = ParseMessage(message.BodyText);
+            SubmitInfo info = new SubmitInfo(parts[0], message.From, parts[1], parts[2], message.Attachments);
+            var result = info.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string initials = "";
+                foreach (string part in message.From.Split(' '))
+                {
+                    initials += part[0];
+                }
+                JobNumber.TryParse(parts[0], out string formated, JobNumber.JobNumberFormats.ShortHyphan);
+                string pFormated = parts[1].Replace("\\", "-")
+                    .Replace("\\", "-")
+                    .Replace("/", "-")
+                    .Replace("\"", "-")
+                    .Replace("*", "-")
+                    .Replace("<", "-")
+                    .Replace(">", "-")
+                    .Replace("|", "-")
+                    .Replace(":", "-");
+                string filenameTemp = $"{formated} {pFormated} {initials} {DateTime.Now:MM-dd-yy}";
+
+                MDG.Options.JobNumber.BaseDirectory = "Z:\\";
+                string dirPath = JobNumber.GetPath(parts[0]) + "\\Field Data\\";
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+
+                int fileCount = 0;
+
+                foreach (OutlookStorage.Attachment attachment in message.Attachments)
+                {
+                    string extent = Path.GetExtension(attachment.Filename);
+                    File.WriteAllBytes(dirPath + filenameTemp + extent, attachment.Data);
+                    fileCount++;
+                }
+
+                var succ = MessageBox.Show($"Files created successfully\nFile Name: {filenameTemp}\nFiles created: {fileCount}\n\nWould you like to open the location now?",
+                    "Success", MessageBoxButtons.YesNo);
+                if (succ == DialogResult.Yes)
+                {
+                    Process.Start(dirPath);
+                }
+            }
+        }
+
+
+        private void HandleEmailFileParse(string sender, string body, DateTime date, List<object> attachments )
+        {
+            var parts = ParseMessage(body);
+            SubmitInfo info = new SubmitInfo(parts[0], sender, parts[1], parts[2], attachments);
+            var result = info.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string initials = "";
+                foreach (string part in sender.Split(' '))
+                {
+                    initials += part[0];
+                }
+                JobNumber.TryParse(parts[0], out string formated, JobNumber.JobNumberFormats.ShortHyphan);
+                string pFormated = parts[1].Replace("\\", "-")
+                    .Replace("\\", "-")
+                    .Replace("/", "-")
+                    .Replace("\"", "-")
+                    .Replace("*", "-")
+                    .Replace("<", "-")
+                    .Replace(">", "-")
+                    .Replace("|", "-")
+                    .Replace(":", "-");
+                string filenameTemp = $"{formated} {pFormated} {initials} {DateTime.Now:MM-dd-yy}";
+
+                MDG.Options.JobNumber.BaseDirectory = "Z:\\";
+                string dirPath = JobNumber.GetPath(parts[0]) + "\\Field Data\\";
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+
+                int fileCount = 0;
+
+                foreach (Storage.Attachment attachment in attachments)
+                {
+                    string extent = Path.GetExtension(attachment.FileName);
+                    File.WriteAllBytes(dirPath + filenameTemp + extent, attachment.Data);
+                    fileCount++;
+                }
+
+                var succ = MessageBox.Show($"Files created successfully\nFile Name: {filenameTemp}\nFiles created: {fileCount}\n\nWould you like to open the location now?",
+                    "Success", MessageBoxButtons.YesNo);
+                if (succ == DialogResult.Yes)
+                {
+                    Process.Start(dirPath);
+                }
+            }
+        }
+
         private List<string> ParseMessage(string source)
         {
             List<string> outp = new List<string> { };
@@ -39,19 +143,12 @@ namespace Email_Parser
             string notes = "";
 
             if (string.IsNullOrEmpty(source)) throw new ArgumentNullException(source, "Source was provided as an empty string.");
-            foreach (string line in source.Split(Environment.NewLine.ToCharArray()))
+            foreach (string line in source.Replace('\t','\0').Split(Environment.NewLine.ToCharArray()))
             {
+                Log.ToDebug($"Content: \"{line}\"");
                 if (string.IsNullOrEmpty(line))
                 {
-                    if (isNotes)
-                    {
-                        outp.Add(notes);
-                        isNotes = false;
-                    }
-                    else
-                    {
-                        //Do nothing
-                    }
+
                 }
                 else if (line.ToLower() == "!!job number")
                 {
@@ -75,8 +172,14 @@ namespace Email_Parser
                 {
                     isNotes = true;
                 }
-                else if (isJobNumber)
+                else if (line.ToLower() == "!!end")
                 {
+                    outp.Add(notes);
+                    isNotes = false;
+                }
+                else if (isNotes)
+                {
+                    Log.ToDebug("--adding line to note section.");
                     notes += line + Environment.NewLine;
                 }
             }
@@ -99,71 +202,30 @@ namespace Email_Parser
                 for (int fileIndex = 0; fileIndex < filenames.Length; fileIndex++)
                 {
                     //use the fileindex to get the name and data stream
-                    string filename = filenames[fileIndex];
                     MemoryStream filestream = filestreams[fileIndex];
-
-                    OutlookStorage.Message message = new OutlookStorage.Message(filestream);
-                    var parts = ParseMessage(message.BodyText);
-                    SubmitInfo info = new SubmitInfo(parts[0], message.From, parts[1],parts[2],message.Attachments);
-                    var result = info.ShowDialog();
-
-                    if (result == DialogResult.OK)
-                    {
-                        string initials = "";
-                        foreach (string part in message.From.Split(' '))
-                        {
-                            initials += part[0];
-                        }
-                        JobNumber.TryParse(parts[0], out string formated, JobNumber.JobNumberFormats.ShortHyphan);
-                        string pFormated = parts[1].Replace("\\", "-")
-                            .Replace("\\", "-")
-                            .Replace("/", "-")
-                            .Replace("\"", "-")
-                            .Replace("*", "-")
-                            .Replace("<", "-")
-                            .Replace(">", "-")
-                            .Replace("|", "-")
-                            .Replace(":", "-");
-                        string filenameTemp = $"{formated} {pFormated} {initials} {DateTime.Now.ToString("MM-dd-yy")}";
-
-                        MDG.Options.JobNumber.BaseDirectory = "Z:\\";
-                        string dirPath = JobNumber.GetPath(parts[0]) + "\\Field Data\\";
-                        if (!Directory.Exists(dirPath))
-                        {
-                            Directory.CreateDirectory(dirPath);
-                        }
-
-                        int fileCount = 0;
-
-                        foreach (OutlookStorage.Attachment attachment in message.Attachments)
-                        {
-                            string extent = Path.GetExtension(attachment.Filename);
-                            File.WriteAllBytes(dirPath + filenameTemp + extent, attachment.Data);
-                            fileCount++;
-                        }
-
-                        var succ = MessageBox.Show($"Files created successfully\nFile Name: {filenameTemp}\nFiles created: {fileCount}\n\nWould you like to open the location now?", 
-                            "Success", MessageBoxButtons.YesNo);
-                        if (succ == DialogResult.Yes)
-                        {
-                            Process.Start(dirPath);
-                        }
-                    }
-
-                    message.Dispose();
+                    HandleEmailParse(filestream);
                 }
             }
             else
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                int fileCount = 0;
                 foreach (var file in files)
                 {
-                    string fExtent = System.IO.Path.GetExtension(file);
+                    string fExtent = Path.GetExtension(file);
                     switch (fExtent)
                     {
                         case ".msg":
                             {
-                                Log.ToDebug("Outlook message file");
+                                using (var msg = new MsgReader.Outlook.Storage.Message(file))
+                                {
+                                    var from = msg.Sender.DisplayName;
+                                    var sentOn = msg.SentOn.Value;
+                                    var htmlBody = msg.BodyText;
+                                    var attachments = msg.Attachments;
+                                    HandleEmailFileParse(from, htmlBody, sentOn, attachments);
+                                }
+
                                 break;
                             }
                         case ".jpg":
@@ -172,6 +234,7 @@ namespace Email_Parser
                         case ".tiff":
                             {
                                 Log.ToDebug("image file");
+                                fileCount++;
                                 break;
                             }
                         case ".txt":
@@ -179,17 +242,13 @@ namespace Email_Parser
                         case ".shx":
                             {
                                 Log.ToDebug("field data file");
-                                break;
-                            }
-                        case null:
-                            {
-
-                                Log.ToDebug("Outlook message file from outlook?");
+                                fileCount++;
                                 break;
                             }
                         default:
                             {
                                 Log.ToDebug($"unknown file type: {fExtent}");
+                                fileCount++;
                                 break;
                             }
                     }
