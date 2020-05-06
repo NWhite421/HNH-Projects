@@ -3,7 +3,6 @@ E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\Email_Parser.exe
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\Email_Parser.pdb
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\MDG.Core.dll
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csprojAssemblyReference.cache
-E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.Form1.resources
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.Properties.Resources.resources
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.GenerateResource.cache
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.CoreCompileInputs.cache
@@ -35,3 +34,17 @@ C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Pars
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\pt\MsgReader.resources.dll
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\zh-CN\MsgReader.resources.dll
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\zh-TW\MsgReader.resources.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\MsgReader.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\OpenMcdf.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\RtfPipe.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\MsgReader.xml
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\OpenMcdf.xml
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\de\MsgReader.resources.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\es\MsgReader.resources.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\fr\MsgReader.resources.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\nl\MsgReader.resources.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\pt\MsgReader.resources.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\zh-CN\MsgReader.resources.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\zh-TW\MsgReader.resources.dll
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.MainForm.resources
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.SubmitInfo.resources

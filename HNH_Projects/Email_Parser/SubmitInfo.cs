@@ -17,6 +17,10 @@ namespace Email_Parser
 {
     public partial class SubmitInfo : Form
     {
+        public SubmissionDetails SubmissionDetails { get; set; }
+
+        internal bool AllowEdit { get; set; }
+
         internal SubmitInfo()
         {
             InitializeComponent();
@@ -37,13 +41,13 @@ namespace Email_Parser
                     LbFiles.Items.Add(entry);
                 }
                 LblDate.Text = "Received: " + DateTime.Now.ToString("MM/dd/yyyy");
+                AllowEdit = false;
             }
             else
             {
                 Log.AddError("Job number provided was not valid.");
             }
         }
-
 
         public SubmitInfo(string jobNumber, string submitter, string purpose, string notes, List<object> attachments)
         {
@@ -61,6 +65,7 @@ namespace Email_Parser
                     LbFiles.Items.Add(entry);
                 }
                 LblDate.Text = "Received: " + DateTime.Now.ToString("MM/dd/yyyy");
+                AllowEdit = false;
             }
             else
             {
@@ -68,8 +73,35 @@ namespace Email_Parser
             }
         }
 
+        public SubmitInfo(List<string> attachments)
+        {
+            InitializeComponent();
+            foreach (string file in attachments)
+            {
+                string entry = $"[{Path.GetExtension(file).Remove(0, 1).ToLower()}]: {Path.GetFileNameWithoutExtension(file)}";
+                LbFiles.Items.Add(entry);
+            }
+            LblDate.Text = "Received: " + DateTime.Now.ToString("MM/dd/yyyy");
+
+            AllowEdit = true;
+            TxtJobNumber.Enabled = true;
+            TxtSubmitPerson.Enabled = true;
+            TxtPurpose.Enabled = true;
+            TxtNotes.Enabled = true;
+        }
+
         private void ConfirmSettings(object sender, EventArgs e)
         {
+            if (AllowEdit)
+            {
+                SubmissionDetails = new SubmissionDetails
+                {
+                    JobNumber = new List<string> { TxtJobNumber.Text },
+                    Sender = TxtSubmitPerson.Text,
+                    Purpose = TxtPurpose.Text,
+                    Notes = TxtNotes.Text
+                };
+            }
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

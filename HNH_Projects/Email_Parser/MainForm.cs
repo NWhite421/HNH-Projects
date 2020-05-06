@@ -25,27 +25,185 @@ namespace Email_Parser
             MDG.Options.JobNumber.BaseDirectory = "Z:\\";
         }
 
-        private void DragDropEnter(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.All;
-        }
+        #region FILE HANDLERS
 
-        private void HandleEmailParse(MemoryStream filestream)
+        //COMPLETE
+        private void HandleOutlookItem(MemoryStream filestream)
         {
             OutlookStorage.Message message = new OutlookStorage.Message(filestream);
-            var parts = ParseMessage(message.BodyText);
-            SubmitInfo info = new SubmitInfo(parts[0], message.From, parts[1], parts[2], message.Attachments);
-            var result = info.ShowDialog();
+            string fileName = $"temp_msg_{DateTime.Now:MM-dd-yy hh-mm-ss tt}.msg";
+            message.Save(@"c:\temp\" + fileName);
+            message.Dispose();
+            HandleEmailFile(@"c:\temp\" + fileName);
+            File.Delete(@"c:\temp\" + fileName);
+        }
 
-            if (result == DialogResult.OK)
+        //COMPLETE
+        private void HandleEmailFile(string file)
+        {
+            using (var message = new Storage.Message(file))
             {
-                string initials = "";
-                foreach (string part in message.From.Split(' '))
+                var attachFolder = Directory.CreateDirectory($@"c:\temp\temp_msg_attachments_{DateTime.Now:MM-dd-yy hh-mm-ss tt}").FullName;
+                List<string> files = new List<string> { };
+                foreach (Storage.Attachment attachment in message.Attachments)
+                {
+                    File.WriteAllBytes(attachFolder + "\\" + attachment.FileName, attachment.Data);
+                    files.Add(attachFolder + "\\" + attachment.FileName);
+                }
+
+                SubmissionDetails details = ParseMessage(message.BodyText);
+                details.Sender = message.Sender.DisplayName;
+                int[] handed = HandleFiles(details, files);
+                Directory.Delete(attachFolder, true);
+                if (handed[0] + handed[1] == 0)
+                {
+                    MessageBox.Show("Something went wrong. Please try again.");
+                    return;
+                }
+                message.Save($@"Z:\Archive\Field Data E-Mails\{details.JobNumber[0]} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy HH-mm-ss}.msg");
+                File.AppendAllLines($@"Z:\Archive\Field Data E-Mails Record Search.csv",
+                    new List<string> { $@"{details.JobNumber[0]}, {details.Address}, {details.Purpose}, {GetInitials(details.Sender)}, {DateTime.Now:MM-dd-yy HH-mm-ss}, Z:\Archive\{details.JobNumber[0]} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy HH-mm-ss}.msg" });
+                var result = MessageBox.Show(
+                    $"The e-mail has been parsed successfully! See below for the information.\n" +
+                    $"Address: {details.Address}\n" +
+                    $"Message Date: {message.ReceivedOn.Value}\n" +
+                    $"Sender: {message.Sender.DisplayName} ({message.Sender.Email})\n" +
+                    $"Purpose: {details.Purpose}\n" +
+                    $"Total Files: {message.Attachments.Count}\n" +
+                    $"    Images: {handed[1]}\n" +
+                    $"    Other Files: {handed[0]}\n\n" +
+                    $"Would you like to open the field data now?",
+                    "Parsing Successful",
+                    MessageBoxButtons.YesNo
+                    );
+                message.Dispose();
+                if (result == DialogResult.Yes)
+                {
+                    Process.Start(JobNumber.GetPath(details.JobNumber[0]) + "\\Field Data\\");
+                }
+            }
+        }
+
+        #endregion
+
+        #region INTERNAL FUNCTIONS
+
+        private int[] HandleFiles(SubmissionDetails details, List<string> files)
+        {
+            var handledFiles = new int[] { 0, 0 };
+            var isMultipleFiles = false;
+            var currItieration = 0;
+            if (details.JobNumber.Count > 1)
+            {
+                isMultipleFiles = true;
+            }
+            foreach (string jobNo in details.JobNumber)
+            {
+                var jobPath = JobNumber.GetPath(jobNo);
+                handledFiles = new int[] { 0, 0 };
+                var confirmOverwrite = false;
+
+                if (string.IsNullOrEmpty(jobPath)) return handledFiles;
+
+                string filename = $"{jobNo} {details.Purpose} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy HH-mm-ss}";
+                if (!Directory.Exists(jobPath + "\\Field Data\\"))
+                {
+                    jobPath = Directory.CreateDirectory(jobPath + "\\Field Data\\").FullName;
+                }
+                else
+                {
+                    jobPath += "\\Field Data\\";
+                }
+                foreach (string path in files)
+                {
+                    string fext = Path.GetExtension(path);
+                    string fPath = Path.GetFileNameWithoutExtension(path).Split(' ')[0];
+
+                    if (JobNumber.TryParse(fPath) && jobNo != fPath && !confirmOverwrite && (!isMultipleFiles || isMultipleFiles && currItieration == 0))
+                    {
+                        var confirm = MessageBox.Show(
+                            $"A conflict in job number has occured.\n" +
+                            $"The file job number is: {fPath}\n" +
+                            $"The record job number is: {jobNo}\n\n" +
+                            $"Do you wish to keep the RECORD number or cencel the operation?\n" +
+                            $"Press \"Yes\" to overwrite the file and KEEP THE RECORD.\n" +
+                            $"Press \"No\" to cancel the operation.",
+                            "Confirm Overwrite",
+                            MessageBoxButtons.YesNo
+                            );
+                        if (confirm == DialogResult.No) return handledFiles;
+                        confirmOverwrite = true;
+                    }
+
+                    switch (fext.ToLower())
+                    {
+                        case ".jpeg":
+                        case ".jpg":
+                        case ".png":
+                        case ".gif":
+                        case ".tiff":
+                            {
+                                if (!Directory.Exists(jobPath + "\\Images\\"))
+                                {
+                                    Directory.CreateDirectory(jobPath + "\\Images\\");
+                                }
+                                string fillpath = ValidatePathString(Path.Combine(jobPath + "\\Images\\", filename + fext));
+                                File.Copy(path, fillpath);
+                                handledFiles[1]++;
+                                break;
+                            }
+                        default:
+                            {
+                                string fillpath = ValidatePathString(Path.Combine(jobPath, filename + fext));
+                                File.Copy(path, fillpath);
+                                handledFiles[0]++;
+                                break;
+                            }
+                    }
+                }
+
+                string logEntry = $@"Sent by: {details.Sender}" + Environment.NewLine +
+                    $@"Processed By: {Environment.MachineName}\{Environment.UserName}" + Environment.NewLine +
+                    $@"Date: {DateTime.Now:MM-dd-yy HH-mm-ss}" + Environment.NewLine +
+                    $@"Purpose: {details.Purpose}" + Environment.NewLine +
+                    $@"Occurances: {details.JobNumber.Count}" + Environment.NewLine +
+                    $@"Address: {details.Address}" + Environment.NewLine +
+                    $@"Notes:" + Environment.NewLine + $"{details.Notes}";
+                if (!Directory.Exists(jobPath + "\\Logs\\"))
+                {
+                    jobPath = Directory.CreateDirectory(jobPath + "\\Logs\\").FullName;
+                }
+                else
+                {
+                    jobPath += "\\Logs\\";
+                }
+                File.WriteAllText(jobPath + filename + ".log", logEntry);
+                currItieration++;
+            }
+            return handledFiles;
+        }
+
+        private string GetInitials(string name)
+        {
+            string[] parts = name.Split(' ');
+            string initials = "";
+            foreach (string part in parts)
+            {
+                if (!string.IsNullOrEmpty(part))
                 {
                     initials += part[0];
                 }
-                JobNumber.TryParse(parts[0], out string formated, JobNumber.JobNumberFormats.ShortHyphan);
-                string pFormated = parts[1].Replace("\\", "-")
+            }
+            return initials;
+        }
+
+        private string ValidatePathString(string source)
+        {
+            string parent = Directory.GetParent(source).FullName;
+            string fileName = Path.GetFileNameWithoutExtension(source);
+            string extent = Path.GetExtension(source);
+
+            fileName = fileName.Replace("\\", "-")
                     .Replace("\\", "-")
                     .Replace("/", "-")
                     .Replace("\"", "-")
@@ -54,112 +212,31 @@ namespace Email_Parser
                     .Replace(">", "-")
                     .Replace("|", "-")
                     .Replace(":", "-");
-                string filenameTemp = $"{formated} {pFormated} {initials} {DateTime.Now:MM-dd-yy}";
 
-                MDG.Options.JobNumber.BaseDirectory = "Z:\\";
-                string dirPath = JobNumber.GetPath(parts[0]) + "\\Field Data\\";
-                if (!Directory.Exists(dirPath))
-                {
-                    Directory.CreateDirectory(dirPath);
-                }
-
-                int fileCount = 0;
-
-                foreach (OutlookStorage.Attachment attachment in message.Attachments)
-                {
-                    string extent = Path.GetExtension(attachment.Filename);
-                    File.WriteAllBytes(dirPath + filenameTemp + extent, attachment.Data);
-                    fileCount++;
-                }
-                string log = $"Log for processed field data:\n" +
-                    $"Date: {DateTime.Now:MM-dd-yyyy hh-mm-ss tt}\n" +
-                    $"Sender: {message.From}\n" +
-                    $"Processor: {Environment.MachineName} \\ {Environment.UserName}\n" +
-                    $"Files Processed: {fileCount}\n" +
-                    $"Project Notes:\n" +
-                    $"{parts[2]}";
-                File.WriteAllText(dirPath + filenameTemp + ".log", log);
-
-                var succ = MessageBox.Show($"Files created successfully\nFile Name: {filenameTemp}\nFiles created: {fileCount}\n\nWould you like to open the location now?",
-                    "Success", MessageBoxButtons.YesNo);
-                if (succ == DialogResult.Yes)
-                {
-                    Process.Start(dirPath);
-                }
-            }
-        }
-
-
-        private void HandleEmailFileParse(string sender, string body, DateTime date, List<object> attachments )
-        {
-            var parts = ParseMessage(body);
-            SubmitInfo info = new SubmitInfo(parts[0], sender, parts[1], parts[2], attachments);
-            var result = info.ShowDialog();
-
-            if (result == DialogResult.OK)
+            string nFileName = Path.Combine(parent, fileName + extent);
+            int iteration = 0;
+            while (File.Exists(nFileName))
             {
-                string initials = "";
-                foreach (string part in sender.Split(' '))
-                {
-                    initials += part[0];
-                }
-                JobNumber.TryParse(parts[0], out string formated, JobNumber.JobNumberFormats.ShortHyphan);
-                string pFormated = parts[1].Replace("\\", "-")
-                    .Replace("\\", "-")
-                    .Replace("/", "-")
-                    .Replace("\"", "-")
-                    .Replace("*", "-")
-                    .Replace("<", "-")
-                    .Replace(">", "-")
-                    .Replace("|", "-")
-                    .Replace(":", "-");
-                string filenameTemp = $"{formated} {pFormated} {initials} {DateTime.Now:MM-dd-yy}";
-
-                MDG.Options.JobNumber.BaseDirectory = "Z:\\";
-                string dirPath = JobNumber.GetPath(parts[0]) + "\\Field Data\\";
-                if (!Directory.Exists(dirPath))
-                {
-                    Directory.CreateDirectory(dirPath);
-                }
-
-                int fileCount = 0;
-
-                foreach (Storage.Attachment attachment in attachments)
-                {
-                    string extent = Path.GetExtension(attachment.FileName);
-                    File.WriteAllBytes(dirPath + filenameTemp + extent, attachment.Data);
-                    fileCount++;
-                }
-                string log = $"Log for processed field data:\n" +
-                    $"Date: {date}\n" +
-                    $"Sender: {sender}\n" +
-                    $"Processor: {Environment.MachineName} \\ {Environment.UserName}\n" +
-                    $"Files Processed: {fileCount}\n" +
-                    $"Project Notes:\n" +
-                    $"{parts[2]}";
-                File.WriteAllText(dirPath + filenameTemp + ".log", log);
-
-                var succ = MessageBox.Show($"Files created successfully\nFile Name: {filenameTemp}\nFiles created: {fileCount}\n\nWould you like to open the location now?",
-                    "Success", MessageBoxButtons.YesNo);
-                if (succ == DialogResult.Yes)
-                {
-                    Process.Start(dirPath);
-                }
+                nFileName = Path.Combine(parent, fileName + $" ({iteration + 1})" + extent);
+                iteration++;
             }
+
+            return nFileName;
         }
 
-        private List<string> ParseMessage(string source)
+        private SubmissionDetails ParseMessage(string bodyText)
         {
-            List<string> outp = new List<string> { };
+            SubmissionDetails details = new SubmissionDetails();
 
             bool isJobNumber = false;
             bool isPurpose = false;
             bool isNotes = false;
+            bool isAddress = false;
 
             string notes = "";
 
-            if (string.IsNullOrEmpty(source)) throw new ArgumentNullException(source, "Source was provided as an empty string.");
-            foreach (string line in source.Replace('\t','\0').Split(Environment.NewLine.ToCharArray()))
+            if (string.IsNullOrEmpty(bodyText)) throw new ArgumentNullException(bodyText, "Source was provided as an empty string.");
+            foreach (string line in bodyText.Replace('\t','\0').Split(Environment.NewLine.ToCharArray()))
             {
                 Log.ToDebug($"Content: \"{line}\"");
                 if (string.IsNullOrEmpty(line))
@@ -172,25 +249,65 @@ namespace Email_Parser
                 }
                 else if (isJobNumber)
                 {
-                    outp.Add(line);
+                    string[] numbers = line.Split(' ');
+                    int number = 0;
+                    details.JobNumber = new List<string> { };
+
+                    foreach (string iNumber in numbers)
+                    {
+                        if (number == 0)
+                        {
+                            details.JobNumber.Add(iNumber);
+                            number = 1;
+                        }
+                        else
+                        {
+                            string[] parts = details.JobNumber[0].Split('-');
+                            details.JobNumber.Add($"{parts[0]}-{parts[1]}-{iNumber}");
+                        }
+                    }
                     isJobNumber = false;
+                }
+                else if (line.ToLower() == "!!address")
+                {
+                    isAddress = true;
+                }
+                else if (isAddress)
+                {
+                    details.Address = line;
+                    isAddress = false;
                 }
                 else if (line.ToLower() == "!!purpose")
                 {
+                    if (isAddress && string.IsNullOrEmpty(details.Address))
+                    {
+                        isAddress = false;
+                        details.Address = "NoAddress";
+                    }
                     isPurpose = true;
                 }
                 else if (isPurpose)
                 {
-                    outp.Add(line);
+                    details.Purpose = line;
                     isPurpose = false;
                 }
                 else if (line.ToLower() == "!!notes")
                 {
+                    if (isAddress && string.IsNullOrEmpty(details.Address))
+                    {
+                        isAddress = false;
+                        details.Address = "NoAddress";
+                    }
                     isNotes = true;
                 }
                 else if (line.ToLower() == "!!end")
                 {
-                    outp.Add(notes);
+                    if (isAddress && string.IsNullOrEmpty(details.Address))
+                    {
+                        isAddress = false;
+                        details.Address = "NoAddress";
+                    }
+                    details.Notes = notes;
                     isNotes = false;
                 }
                 else if (isNotes)
@@ -199,12 +316,24 @@ namespace Email_Parser
                     notes += line + Environment.NewLine;
                 }
             }
+            if (string.IsNullOrEmpty(details.Address))
+            {
+                details.Address = "NoAddress";
+            }
 
-            return outp;
+            return details;
+        }
+        #endregion
+
+        #region EVENT HANDLERS
+        private void DragDropEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.All;
         }
 
         private void DragDropSubmit(object sender, DragEventArgs e)
         {
+            //If the thing being dragged is an outlook message item. (not the .msg file)
             if (!e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 Log.ToDebug("Outlook message file from outlook!");
@@ -219,58 +348,75 @@ namespace Email_Parser
                 {
                     //use the fileindex to get the name and data stream
                     MemoryStream filestream = filestreams[fileIndex];
-                    HandleEmailParse(filestream);
+                    HandleOutlookItem(filestream);
                 }
             }
             else
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                int fileCount = 0;
-                foreach (var file in files)
+                if (files.Length == 1)
                 {
-                    string fExtent = Path.GetExtension(file);
-                    switch (fExtent)
+                    string path = files[0];
+                    string fExtent = Path.GetExtension(path);
+                    //It is a msg file.
+                    if (fExtent == ".msg")
                     {
-                        case ".msg":
+                        HandleEmailFile(path);
+                    } 
+                    //It isn't a msg file.
+                    else
+                    {
+                        SubmitInfo info = new SubmitInfo(new List<string> { path });
+                        if (info.ShowDialog() == DialogResult.OK)
+                        {
+                            var handed = HandleFiles(info.SubmissionDetails, new List<string> { path });
+                            var result = MessageBox.Show(
+                            $"The file has been parsed successfully! See below for the information.\n" +
+                            $"Submission Date: {DateTime.Now:MM-dd-yy HH-mm-ss}\n" +
+                            $"Sender: {info.SubmissionDetails.Sender}\n" +
+                            $"Purpose: {info.SubmissionDetails.Purpose}\n" +
+                            $"Total Files: 1\n" +
+                            $"    Images: {handed[1]}\n" +
+                            $"    Other Files: {handed[0]}\n\n" +
+                            $"Would you like to open the field data now?",
+                            "Parsing Successful",
+                            MessageBoxButtons.YesNo
+                            );
+                            if (result == DialogResult.Yes)
                             {
-                                using (var msg = new MsgReader.Outlook.Storage.Message(file))
-                                {
-                                    var from = msg.Sender.DisplayName;
-                                    var sentOn = msg.SentOn.Value;
-                                    var htmlBody = msg.BodyText;
-                                    var attachments = msg.Attachments;
-                                    HandleEmailFileParse(from, htmlBody, sentOn, attachments);
-                                }
-
-                                break;
+                                Process.Start(JobNumber.GetPath(info.SubmissionDetails.JobNumber[0]) + "\\Field Data\\");
                             }
-                        case ".jpg":
-                        case ".png":
-                        case ".gif":
-                        case ".tiff":
-                            {
-                                Log.ToDebug("image file");
-                                fileCount++;
-                                break;
-                            }
-                        case ".txt":
-                        case ".dwg":
-                        case ".shx":
-                            {
-                                Log.ToDebug("field data file");
-                                fileCount++;
-                                break;
-                            }
-                        default:
-                            {
-                                Log.ToDebug($"unknown file type: {fExtent}");
-                                fileCount++;
-                                break;
-                            }
+                        }
+                    }
+                }
+                else
+                {
+                    SubmitInfo info = new SubmitInfo(files.ToList());
+                    if (info.ShowDialog() == DialogResult.OK)
+                    {
+                        var handed = HandleFiles(info.SubmissionDetails, files.ToList());
+                        var result = MessageBox.Show(
+                        $"The file has been parsed successfully! See below for the information.\n" +
+                        $"Submission Date: {DateTime.Now:MM-dd-yy HH-mm-ss}\n" +
+                        $"Sender: {info.SubmissionDetails.Sender}\n" +
+                        $"Purpose: {info.SubmissionDetails.Purpose}\n" +
+                        $"Total Files: {files.ToList().Count}\n" +
+                        $"    Images: {handed[1]}\n" +
+                        $"    Other Files: {handed[0]}\n\n" +
+                        $"Would you like to open the field data now?",
+                        "Parsing Successful",
+                        MessageBoxButtons.YesNo
+                        );
+                        if (result == DialogResult.Yes)
+                        {
+                            Process.Start(JobNumber.GetPath(info.SubmissionDetails.JobNumber[0]) + "\\Field Data\\");
+                        }
                     }
                 }
             }
             
         }
+
+        #endregion
     }
 }

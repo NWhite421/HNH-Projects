@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.lblDrop = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -49,17 +50,18 @@
             this.lblDrop.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragDropSubmit);
             this.lblDrop.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragDropEnter);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Controls.Add(this.lblDrop);
             this.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MinimumSize = new System.Drawing.Size(300, 300);
-            this.Name = "Form1";
-            this.Text = "Parse an E-Mail";
+            this.Name = "MainForm";
+            this.Text = "Parse Field Data";
             this.ResumeLayout(false);
 
         }
