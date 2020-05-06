@@ -71,6 +71,14 @@ namespace Email_Parser
                     File.WriteAllBytes(dirPath + filenameTemp + extent, attachment.Data);
                     fileCount++;
                 }
+                string log = $"Log for processed field data:\n" +
+                    $"Date: {DateTime.Now:MM-dd-yyyy hh-mm-ss tt}\n" +
+                    $"Sender: {message.From}\n" +
+                    $"Processor: {Environment.MachineName} \\ {Environment.UserName}\n" +
+                    $"Files Processed: {fileCount}\n" +
+                    $"Project Notes:\n" +
+                    $"{parts[2]}";
+                File.WriteAllText(dirPath + filenameTemp + ".log", log);
 
                 var succ = MessageBox.Show($"Files created successfully\nFile Name: {filenameTemp}\nFiles created: {fileCount}\n\nWould you like to open the location now?",
                     "Success", MessageBoxButtons.YesNo);
@@ -122,6 +130,14 @@ namespace Email_Parser
                     File.WriteAllBytes(dirPath + filenameTemp + extent, attachment.Data);
                     fileCount++;
                 }
+                string log = $"Log for processed field data:\n" +
+                    $"Date: {date}\n" +
+                    $"Sender: {sender}\n" +
+                    $"Processor: {Environment.MachineName} \\ {Environment.UserName}\n" +
+                    $"Files Processed: {fileCount}\n" +
+                    $"Project Notes:\n" +
+                    $"{parts[2]}";
+                File.WriteAllText(dirPath + filenameTemp + ".log", log);
 
                 var succ = MessageBox.Show($"Files created successfully\nFile Name: {filenameTemp}\nFiles created: {fileCount}\n\nWould you like to open the location now?",
                     "Success", MessageBoxButtons.YesNo);
