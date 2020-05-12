@@ -48,3 +48,4 @@ E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\zh-CN\MsgReader.resou
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\zh-TW\MsgReader.resources.dll
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.MainForm.resources
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.SubmitInfo.resources
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.Conflict.resources

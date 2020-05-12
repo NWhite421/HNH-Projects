@@ -14,6 +14,7 @@ using System.IO;
 using System.Diagnostics;
 using MsgReader;
 using MsgReader.Outlook;
+using System.Xml;
 
 namespace Email_Parser
 {
@@ -22,6 +23,10 @@ namespace Email_Parser
         public MainForm()
         {
             InitializeComponent();
+            if (!Directory.Exists("C:\\temp"))
+            {
+                Directory.CreateDirectory("C:\\temp");
+            }
             MDG.Options.JobNumber.BaseDirectory = "Z:\\";
         }
 
@@ -60,9 +65,13 @@ namespace Email_Parser
                     MessageBox.Show("Something went wrong. Please try again.");
                     return;
                 }
+#if DEBUG
+
+#else
                 message.Save($@"Z:\Archive\Field Data E-Mails\{details.JobNumber[0]} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy HH-mm-ss}.msg");
                 File.AppendAllLines($@"Z:\Archive\Field Data E-Mails Record Search.csv",
                     new List<string> { $@"{details.JobNumber[0]}, {details.Address}, {details.Purpose}, {GetInitials(details.Sender)}, {DateTime.Now:MM-dd-yy HH-mm-ss}, Z:\Archive\{details.JobNumber[0]} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy HH-mm-ss}.msg" });
+#endif
                 var result = MessageBox.Show(
                     $"The e-mail has been parsed successfully! See below for the information.\n" +
                     $"Address: {details.Address}\n" +
@@ -92,6 +101,9 @@ namespace Email_Parser
         {
             var handledFiles = new int[] { 0, 0 };
             var isMultipleFiles = false;
+            var overwriteYearMonth = false;
+            var isValidJob = false;
+            var overwriteExisingfiles = 0;
             var currItieration = 0;
             if (details.JobNumber.Count > 1)
             {
@@ -99,13 +111,42 @@ namespace Email_Parser
             }
             foreach (string jobNo in details.JobNumber)
             {
-                var jobPath = JobNumber.GetPath(jobNo);
+                string jobNumber = jobNo;
+                var jobPath = JobNumber.GetPath(jobNumber);
                 handledFiles = new int[] { 0, 0 };
-                var confirmOverwrite = false;
 
                 if (string.IsNullOrEmpty(jobPath)) return handledFiles;
 
-                string filename = $"{jobNo} {details.Purpose} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy HH-mm-ss}";
+                //Grab the first file and check for its job number.
+                string pathT = files[0];
+                string fPath = Path.GetFileNameWithoutExtension(pathT).Split(' ')[0];
+
+                if (JobNumber.TryParse(fPath) && jobNo != fPath && !overwriteYearMonth && (!isMultipleFiles || isMultipleFiles && currItieration == 0))
+                {
+                    Conflict conflict = new Conflict(fPath, jobNo);
+                    conflict.ShowDialog();
+                    switch (conflict.ConflictResult)
+                    {
+                        case ConflictResult.KeepFileNumber:
+                        case ConflictResult.KeepRecordNumber:
+                        case ConflictResult.OverwriteNumber:
+                            {
+                                if (conflict.OverwriteList)
+                                {
+                                    overwriteYearMonth = true;
+                                }
+                                jobNumber = conflict.KeptNumber;
+                                break;
+                            }
+                        case ConflictResult.Reject:
+                            {
+                                MessageBox.Show("The conflict was rejected. Aborting operation.");
+                                return new int[] { 0, 0 };
+                            }
+                    }
+                }
+
+                string filename = $"{jobNumber} {details.Purpose} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy}";
                 if (!Directory.Exists(jobPath + "\\Field Data\\"))
                 {
                     jobPath = Directory.CreateDirectory(jobPath + "\\Field Data\\").FullName;
@@ -117,23 +158,6 @@ namespace Email_Parser
                 foreach (string path in files)
                 {
                     string fext = Path.GetExtension(path);
-                    string fPath = Path.GetFileNameWithoutExtension(path).Split(' ')[0];
-
-                    if (JobNumber.TryParse(fPath) && jobNo != fPath && !confirmOverwrite && (!isMultipleFiles || isMultipleFiles && currItieration == 0))
-                    {
-                        var confirm = MessageBox.Show(
-                            $"A conflict in job number has occured.\n" +
-                            $"The file job number is: {fPath}\n" +
-                            $"The record job number is: {jobNo}\n\n" +
-                            $"Do you wish to keep the RECORD number or cencel the operation?\n" +
-                            $"Press \"Yes\" to overwrite the file and KEEP THE RECORD.\n" +
-                            $"Press \"No\" to cancel the operation.",
-                            "Confirm Overwrite",
-                            MessageBoxButtons.YesNo
-                            );
-                        if (confirm == DialogResult.No) return handledFiles;
-                        confirmOverwrite = true;
-                    }
 
                     switch (fext.ToLower())
                     {
@@ -148,15 +172,170 @@ namespace Email_Parser
                                     Directory.CreateDirectory(jobPath + "\\Images\\");
                                 }
                                 string fillpath = ValidatePathString(Path.Combine(jobPath + "\\Images\\", filename + fext));
-                                File.Copy(path, fillpath);
-                                handledFiles[1]++;
+                                if (File.Exists(fillpath) && overwriteExisingfiles == 0)
+                                {
+                                    var result = MessageBox.Show(
+                                        $"The following file already exists. Do you want to overwrite it?\n\n" +
+                                        $"{fillpath}\n" +
+                                        $"\nPress \"YES\" to overwrite\n" +
+                                        $"Press \"NO\" to append file name\n" +
+                                        $"Press \nCANCEL\n to cancel.",
+                                        "Overwrite file",
+                                        MessageBoxButtons.YesNoCancel
+                                        );
+                                    switch (result)
+                                    {
+                                        case DialogResult.Yes:
+                                            {
+                                                File.Copy(path, fillpath);
+                                                handledFiles[1]++;
+                                                overwriteExisingfiles = 1;
+                                                break;
+                                            }
+                                        case DialogResult.No:
+                                            {
+                                                int fileTry = 1;
+                                                bool failedattempt = true;
+                                                while (failedattempt)
+                                                {
+                                                    string filenameExtra = filename + $" - ({fileTry})";
+                                                    fillpath = ValidatePathString(Path.Combine(jobPath + "\\Images\\", filename + fext));
+                                                    if (File.Exists(fillpath))
+                                                    {
+                                                        fileTry++;
+                                                    }
+                                                    else
+                                                    {
+                                                        File.Copy(path, fillpath);
+                                                        handledFiles[1]++;
+                                                        failedattempt = false;
+                                                    }
+                                                }
+                                                overwriteExisingfiles = 2;
+                                                break;
+                                            }
+                                        case DialogResult.Cancel:
+                                            {
+                                                break;
+                                            }
+                                    }
+                                } 
+                                else if (overwriteExisingfiles == 1)
+                                {
+                                    File.Copy(path, fillpath);
+                                    handledFiles[1]++;
+                                    break;
+                                }
+                                else
+                                {
+                                    int fileTry = 1;
+                                    bool failedattempt = true;
+                                    while (failedattempt)
+                                    {
+                                        string filenameExtra = filename + $" - ({fileTry})";
+                                        fillpath = ValidatePathString(Path.Combine(jobPath + "\\Images\\", filename + fext));
+                                        if (File.Exists(fillpath))
+                                        {
+                                            fileTry++;
+                                        }
+                                        else
+                                        {
+                                            File.Copy(path, fillpath);
+                                            handledFiles[1]++;
+                                            failedattempt = false;
+                                        }
+                                    }
+                                }
                                 break;
                             }
                         default:
                             {
                                 string fillpath = ValidatePathString(Path.Combine(jobPath, filename + fext));
-                                File.Copy(path, fillpath);
-                                handledFiles[0]++;
+                                if (File.Exists(fillpath) && overwriteExisingfiles == 0)
+                                {
+                                    var result = MessageBox.Show(
+                                        $"The following file already exists. Do you want to overwrite it?\n\n" +
+                                        $"{fillpath}\n" +
+                                        $"\nPress \"YES\" to overwrite\n" +
+                                        $"Press \"NO\" to append file name\n" +
+                                        $"Press \"CANCEL\" to cancel.",
+                                        "Overwrite file",
+                                        MessageBoxButtons.YesNoCancel
+                                        );
+                                    switch (result)
+                                    {
+                                        case DialogResult.Yes:
+                                            {
+                                                File.Copy(path, fillpath, true);
+                                                handledFiles[0]++;
+                                                overwriteExisingfiles = 1;
+                                                break;
+                                            }
+                                        case DialogResult.No:
+                                            {
+                                                int fileTry = 1;
+                                                bool failedattempt = true;
+                                                while (failedattempt)
+                                                {
+                                                    string filenameExtra = filename + $" ({fileTry})";
+                                                    fillpath = ValidatePathString(Path.Combine(jobPath, filenameExtra + fext));
+                                                    if (File.Exists(fillpath))
+                                                    {
+                                                        fileTry++;
+                                                    }
+                                                    else
+                                                    {
+                                                        File.Copy(path, fillpath);
+                                                        handledFiles[0]++;
+                                                        failedattempt = false;
+                                                    }
+                                                }
+                                                overwriteExisingfiles = 2;
+                                                break;
+                                            }
+                                        case DialogResult.Cancel:
+                                            {
+                                                break;
+                                            }
+                                    }
+                                }
+                                else if (File.Exists(fillpath) && overwriteExisingfiles == 1)
+                                {
+                                    File.Copy(path, fillpath, true);
+                                    handledFiles[0]++;
+                                    break;
+                                }
+                                else if (File.Exists(fillpath) && overwriteExisingfiles == 2)
+                                {
+                                    int fileTry = 1;
+                                    bool failedattempt = true;
+                                    while (failedattempt)
+                                    {
+                                        string filenameExtra = filename + $" ({fileTry})";
+                                        fillpath = ValidatePathString(Path.Combine(jobPath, filenameExtra + fext));
+                                        if (File.Exists(fillpath))
+                                        {
+                                            fileTry++;
+                                        }
+                                        else
+                                        {
+                                            File.Copy(path, fillpath);
+                                            handledFiles[0]++;
+                                            failedattempt = false;
+                                        }
+                                    }
+                                    break;
+                                }
+                                else if (!File.Exists(fillpath))
+                                {
+                                    File.Copy(path, fillpath);
+                                    handledFiles[0]++;
+                                    break;
+                                }
+                                else
+                                {
+                                    break;
+                                }
                                 break;
                             }
                     }
@@ -214,12 +393,6 @@ namespace Email_Parser
                     .Replace(":", "-");
 
             string nFileName = Path.Combine(parent, fileName + extent);
-            int iteration = 0;
-            while (File.Exists(nFileName))
-            {
-                nFileName = Path.Combine(parent, fileName + $" ({iteration + 1})" + extent);
-                iteration++;
-            }
 
             return nFileName;
         }

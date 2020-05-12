@@ -64,6 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes.cs" />
+    <Compile Include="Conflict.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Conflict.Designer.cs">
+      <DependentUpon>Conflict.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,6 +86,9 @@
     <Compile Include="SubmitInfo.Designer.cs">
       <DependentUpon>SubmitInfo.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Conflict.resx">
+      <DependentUpon>Conflict.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

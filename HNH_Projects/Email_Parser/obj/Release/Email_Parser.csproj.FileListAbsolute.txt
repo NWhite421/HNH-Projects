@@ -23,3 +23,4 @@ E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Release\Email_Parser.csproj
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Release\Email_Parser.csproj.CopyComplete
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Release\Email_Parser.exe
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Release\Email_Parser.pdb
+E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Release\Email_Parser.Conflict.resources
