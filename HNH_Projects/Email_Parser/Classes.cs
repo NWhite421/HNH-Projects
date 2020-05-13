@@ -9,14 +9,21 @@ namespace Email_Parser
 {
     public class SubmissionDetails
     {
-        public List<string> JobNumber { get; set; }
+        public List<string> JobNumbers = new List<string> { };
 
-        public string Purpose { get; set; }
+        public List<string> Files = new List<string> { };
 
-        public string Notes { get; set; }
+        public string Purpose = "";
 
-        public string Sender { get; set; }
+        public string Notes = "";
 
-        public string Address { get; set; }
+        public string Sender = "";
+
+        public string Address = "";
+    }
+
+    public class Globals
+    {
+        public static string AttachmentFolder { get; set; }
     }
 }

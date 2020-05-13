@@ -28,8 +28,6 @@ namespace Email_Parser
                 Directory.CreateDirectory("C:\\temp");
             }
             MDG.Options.JobNumber.BaseDirectory = "Z:\\";
-            SI_V2 sI_V2 = new SI_V2(new List<string> { "99-01-001" }, new List<string> { "text.txt" }, "Nathan White", "Test File");
-            sI_V2.ShowDialog();
         }
 
         #region FILE HANDLERS
@@ -37,7 +35,8 @@ namespace Email_Parser
         //COMPLETE
         private void HandleOutlookItem(MemoryStream filestream)
         {
-            OutlookStorage.Message message = new OutlookStorage.Message(filestream);
+            Storage.Message message = new Storage.Message(filestream);
+            //OutlookStorage.Message message = new OutlookStorage.Message(filestream);
             string fileName = $"temp_msg_{DateTime.Now:MM-dd-yy hh-mm-ss tt}.msg";
             message.Save(@"c:\temp\" + fileName);
             message.Dispose();
@@ -51,30 +50,36 @@ namespace Email_Parser
             using (var message = new Storage.Message(file))
             {
                 var attachFolder = Directory.CreateDirectory($@"c:\temp\temp_msg_attachments_{DateTime.Now:MM-dd-yy hh-mm-ss tt}").FullName;
-                List<string> files = new List<string> { };
+                SubmissionDetails details = ParseMessage(message.BodyText);
                 foreach (Storage.Attachment attachment in message.Attachments)
                 {
                     File.WriteAllBytes(attachFolder + "\\" + attachment.FileName, attachment.Data);
-                    files.Add(attachFolder + "\\" + attachment.FileName);
+                    details.Files.Add(attachFolder + "\\" + attachment.FileName);
                 }
-
-                SubmissionDetails details = ParseMessage(message.BodyText);
+                
                 details.Sender = message.Sender.DisplayName;
-                int[] handed = HandleFiles(details, files);
+
+                Globals.AttachmentFolder = attachFolder;
+
+                HandleFiles(details);
                 Directory.Delete(attachFolder, true);
-                if (handed[0] + handed[1] == 0)
+
+
+                Globals.AttachmentFolder = "";
+                /*if (handed[0] + handed[1] == 0)
                 {
                     MessageBox.Show("Something went wrong. Please try again.");
                     return;
-                }
+                }*/
 #if DEBUG
 
 #else
-                message.Save($@"Z:\Archive\Field Data E-Mails\{details.JobNumber[0]} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy HH-mm-ss}.msg");
+                message.Save($@"Z:\Archive\Field Data E-Mails\{details.JobNumbers[0]} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy HH-mm-ss}.msg");
                 File.AppendAllLines($@"Z:\Archive\Field Data E-Mails Record Search.csv",
-                    new List<string> { $@"{details.JobNumber[0]}, {details.Address}, {details.Purpose}, {GetInitials(details.Sender)}, {DateTime.Now:MM-dd-yy HH-mm-ss}, Z:\Archive\{details.JobNumber[0]} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy HH-mm-ss}.msg" });
+                    new List<string> { $@"{details.JobNumbers[0]}, {details.Address}, {details.Purpose}, {GetInitials(details.Sender)}, {DateTime.Now:MM-dd-yy HH-mm-ss}, Z:\Archive\{details.JobNumbers[0]} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy HH-mm-ss}.msg" });
 #endif
-                var result = MessageBox.Show(
+                // TODO: Review post-process handling.
+                /*var result = MessageBox.Show(
                     $"The e-mail has been parsed successfully! See below for the information.\n" +
                     $"Address: {details.Address}\n" +
                     $"Message Date: {message.ReceivedOn.Value}\n" +
@@ -90,8 +95,8 @@ namespace Email_Parser
                 message.Dispose();
                 if (result == DialogResult.Yes)
                 {
-                    Process.Start(JobNumber.GetPath(details.JobNumber[0]) + "\\Field Data\\");
-                }
+                    Process.Start.JobNumbers.GetPath(details.JobNumbers[0]) + "\\Field Data\\");
+                }*/
             }
         }
 
@@ -99,22 +104,29 @@ namespace Email_Parser
 
         #region INTERNAL FUNCTIONS
 
-        private int[] HandleFiles(SubmissionDetails details, List<string> files)
+        private void HandleFiles(SubmissionDetails submission)
         {
-            var handledFiles = new int[] { 0, 0 };
+            //Determine if files were dropped or details originatted from e-mail
+            var si_v2 = new SI_V2(submission);
+            var result = si_v2.ShowDialog();
+            if (result.Equals(DialogResult.OK))
+            {
+
+            }
+            /*var handledFiles = new int[] { 0, 0 };
             var isMultipleFiles = false;
             var overwriteYearMonth = false;
             var isValidJob = false;
             var overwriteExisingfiles = 0;
             var currItieration = 0;
-            if (details.JobNumber.Count > 1)
+            if (details.JobNumbers.Count > 1)
             {
                 isMultipleFiles = true;
             }
-            foreach (string jobNo in details.JobNumber)
+            foreach (string jobNo in details.JobNumbers)
             {
-                string jobNumber = jobNo;
-                var jobPath = JobNumber.GetPath(jobNumber);
+                string.JobNumbers = jobNo;
+                var jobPath =.JobNumbers.GetPath.JobNumbers);
                 handledFiles = new int[] { 0, 0 };
 
                 if (string.IsNullOrEmpty(jobPath)) return handledFiles;
@@ -123,7 +135,7 @@ namespace Email_Parser
                 string pathT = files[0];
                 string fPath = Path.GetFileNameWithoutExtension(pathT).Split(' ')[0];
 
-                if (JobNumber.TryParse(fPath) && jobNo != fPath && !overwriteYearMonth && (!isMultipleFiles || isMultipleFiles && currItieration == 0))
+                if .JobNumbers.TryParse(fPath) && jobNo != fPath && !overwriteYearMonth && (!isMultipleFiles || isMultipleFiles && currItieration == 0))
                 {
                     Conflict conflict = new Conflict(fPath, jobNo);
                     conflict.ShowDialog();
@@ -137,7 +149,7 @@ namespace Email_Parser
                                 {
                                     overwriteYearMonth = true;
                                 }
-                                jobNumber = conflict.KeptNumber;
+                               .JobNumbers = conflict.KeptNumber;
                                 break;
                             }
                         case ConflictResult.Reject:
@@ -148,7 +160,7 @@ namespace Email_Parser
                     }
                 }
 
-                string filename = $"{jobNumber} {details.Purpose} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy}";
+                string filename = $".JobNumbers} {details.Purpose} {GetInitials(details.Sender)} {DateTime.Now:MM-dd-yy}";
                 if (!Directory.Exists(jobPath + "\\Field Data\\"))
                 {
                     jobPath = Directory.CreateDirectory(jobPath + "\\Field Data\\").FullName;
@@ -347,7 +359,7 @@ namespace Email_Parser
                     $@"Processed By: {Environment.MachineName}\{Environment.UserName}" + Environment.NewLine +
                     $@"Date: {DateTime.Now:MM-dd-yy HH-mm-ss}" + Environment.NewLine +
                     $@"Purpose: {details.Purpose}" + Environment.NewLine +
-                    $@"Occurances: {details.JobNumber.Count}" + Environment.NewLine +
+                    $@"Occurances: {details.JobNumbers.Count}" + Environment.NewLine +
                     $@"Address: {details.Address}" + Environment.NewLine +
                     $@"Notes:" + Environment.NewLine + $"{details.Notes}";
                 if (!Directory.Exists(jobPath + "\\Logs\\"))
@@ -361,42 +373,7 @@ namespace Email_Parser
                 File.WriteAllText(jobPath + filename + ".log", logEntry);
                 currItieration++;
             }
-            return handledFiles;
-        }
-
-        private string GetInitials(string name)
-        {
-            string[] parts = name.Split(' ');
-            string initials = "";
-            foreach (string part in parts)
-            {
-                if (!string.IsNullOrEmpty(part))
-                {
-                    initials += part[0];
-                }
-            }
-            return initials;
-        }
-
-        private string ValidatePathString(string source)
-        {
-            string parent = Directory.GetParent(source).FullName;
-            string fileName = Path.GetFileNameWithoutExtension(source);
-            string extent = Path.GetExtension(source);
-
-            fileName = fileName.Replace("\\", "-")
-                    .Replace("\\", "-")
-                    .Replace("/", "-")
-                    .Replace("\"", "-")
-                    .Replace("*", "-")
-                    .Replace("<", "-")
-                    .Replace(">", "-")
-                    .Replace("|", "-")
-                    .Replace(":", "-");
-
-            string nFileName = Path.Combine(parent, fileName + extent);
-
-            return nFileName;
+            return handledFiles;*/
         }
 
         private SubmissionDetails ParseMessage(string bodyText)
@@ -422,38 +399,14 @@ namespace Email_Parser
                 {
                     isJobNumber = true;
                 }
-                else if (isJobNumber)
-                {
-                    string[] numbers = line.Split(' ');
-                    int number = 0;
-                    details.JobNumber = new List<string> { };
-
-                    foreach (string iNumber in numbers)
-                    {
-                        if (number == 0)
-                        {
-                            details.JobNumber.Add(iNumber);
-                            number = 1;
-                        }
-                        else
-                        {
-                            string[] parts = details.JobNumber[0].Split('-');
-                            details.JobNumber.Add($"{parts[0]}-{parts[1]}-{iNumber}");
-                        }
-                    }
-                    isJobNumber = false;
-                }
                 else if (line.ToLower() == "!!address")
                 {
+                    isJobNumber = false;
                     isAddress = true;
-                }
-                else if (isAddress)
-                {
-                    details.Address = line;
-                    isAddress = false;
                 }
                 else if (line.ToLower() == "!!purpose")
                 {
+                    isJobNumber = false;
                     if (isAddress && string.IsNullOrEmpty(details.Address))
                     {
                         isAddress = false;
@@ -461,13 +414,9 @@ namespace Email_Parser
                     }
                     isPurpose = true;
                 }
-                else if (isPurpose)
-                {
-                    details.Purpose = line;
-                    isPurpose = false;
-                }
                 else if (line.ToLower() == "!!notes")
                 {
+                    isJobNumber = false;
                     if (isAddress && string.IsNullOrEmpty(details.Address))
                     {
                         isAddress = false;
@@ -477,6 +426,7 @@ namespace Email_Parser
                 }
                 else if (line.ToLower() == "!!end")
                 {
+                    isJobNumber = false;
                     if (isAddress && string.IsNullOrEmpty(details.Address))
                     {
                         isAddress = false;
@@ -484,6 +434,38 @@ namespace Email_Parser
                     }
                     details.Notes = notes;
                     isNotes = false;
+                }
+                else if (isJobNumber)
+                {
+                    string[] numbers = line.Split(' ');
+                    int number = 0;
+
+                    foreach (string iNumber in numbers)
+                    {
+                        if (number == 0)
+                        {
+                            details.JobNumbers.Add(iNumber);
+                            number = 1;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(iNumber))
+                            {
+                                string[] parts = details.JobNumbers[0].Split('-');
+                                details.JobNumbers.Add($"{parts[0]}-{parts[1]}-{iNumber}");
+                            }
+                        }
+                    }
+                }
+                else if (isAddress)
+                {
+                    details.Address = line;
+                    isAddress = false;
+                }
+                else if (isPurpose)
+                {
+                    details.Purpose = line;
+                    isPurpose = false;
                 }
                 else if (isNotes)
                 {
@@ -541,10 +523,10 @@ namespace Email_Parser
                     //It isn't a msg file.
                     else
                     {
-                        SubmitInfo info = new SubmitInfo(new List<string> { path });
+                        /*SubmitInfo info = new SubmitInfo(new List<string> { path });
                         if (info.ShowDialog() == DialogResult.OK)
                         {
-                            var handed = HandleFiles(info.SubmissionDetails, new List<string> { path });
+                            /*var handed = HandleFiles(info.SubmissionDetails, new List<string> { path });
                             var result = MessageBox.Show(
                             $"The file has been parsed successfully! See below for the information.\n" +
                             $"Submission Date: {DateTime.Now:MM-dd-yy HH-mm-ss}\n" +
@@ -559,17 +541,17 @@ namespace Email_Parser
                             );
                             if (result == DialogResult.Yes)
                             {
-                                Process.Start(JobNumber.GetPath(info.SubmissionDetails.JobNumber[0]) + "\\Field Data\\");
+                                Process.Start.JobNumbers.GetPath(info.SubmissionDetails.JobNumbers[0]) + "\\Field Data\\");
                             }
-                        }
+                        }*/
                     }
                 }
                 else
                 {
-                    SubmitInfo info = new SubmitInfo(files.ToList());
+                    /*SubmitInfo info = new SubmitInfo(files.ToList());
                     if (info.ShowDialog() == DialogResult.OK)
                     {
-                        var handed = HandleFiles(info.SubmissionDetails, files.ToList());
+                        /*var handed = HandleFiles(info.SubmissionDetails, files.ToList());
                         var result = MessageBox.Show(
                         $"The file has been parsed successfully! See below for the information.\n" +
                         $"Submission Date: {DateTime.Now:MM-dd-yy HH-mm-ss}\n" +
@@ -584,9 +566,9 @@ namespace Email_Parser
                         );
                         if (result == DialogResult.Yes)
                         {
-                            Process.Start(JobNumber.GetPath(info.SubmissionDetails.JobNumber[0]) + "\\Field Data\\");
+                            Process.Start.JobNumbers.GetPath(info.SubmissionDetails.JobNumbers[0]) + "\\Field Data\\");
                         }
-                    }
+                    }*/
                 }
             }
             

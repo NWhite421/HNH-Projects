@@ -40,6 +40,8 @@
             this.CmdAccept = new System.Windows.Forms.Button();
             this.CmdCancel = new System.Windows.Forms.Button();
             this.CmdDelete = new System.Windows.Forms.Button();
+            this.TxtAddress = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // LblDate
@@ -129,24 +131,26 @@
             // 
             this.CmdAccept.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CmdAccept.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CmdAccept.Location = new System.Drawing.Point(12, 359);
+            this.CmdAccept.Location = new System.Drawing.Point(12, 403);
             this.CmdAccept.Name = "CmdAccept";
             this.CmdAccept.Size = new System.Drawing.Size(329, 64);
             this.CmdAccept.TabIndex = 11;
             this.CmdAccept.Text = "ACCEPT FILES";
             this.CmdAccept.UseVisualStyleBackColor = true;
+            this.CmdAccept.Click += new System.EventHandler(this.OnAcceptFiles);
             // 
             // CmdCancel
             // 
             this.CmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.CmdCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CmdCancel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CmdCancel.Location = new System.Drawing.Point(12, 429);
+            this.CmdCancel.Location = new System.Drawing.Point(12, 473);
             this.CmdCancel.Name = "CmdCancel";
             this.CmdCancel.Size = new System.Drawing.Size(329, 64);
             this.CmdCancel.TabIndex = 12;
             this.CmdCancel.Text = "CANCEL";
             this.CmdCancel.UseVisualStyleBackColor = true;
+            this.CmdCancel.Click += new System.EventHandler(this.OnCancel);
             // 
             // CmdDelete
             // 
@@ -160,13 +164,31 @@
             this.CmdDelete.Visible = false;
             this.CmdDelete.Click += new System.EventHandler(this.DeleteIndex);
             // 
+            // TxtAddress
+            // 
+            this.TxtAddress.Location = new System.Drawing.Point(121, 359);
+            this.TxtAddress.Name = "TxtAddress";
+            this.TxtAddress.Size = new System.Drawing.Size(220, 29);
+            this.TxtAddress.TabIndex = 15;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(45, 362);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(69, 21);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Address:";
+            // 
             // SI_V2
             // 
             this.AcceptButton = this.CmdAccept;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.CmdCancel;
-            this.ClientSize = new System.Drawing.Size(353, 506);
+            this.ClientSize = new System.Drawing.Size(353, 549);
+            this.Controls.Add(this.TxtAddress);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.CmdDelete);
             this.Controls.Add(this.CmdCancel);
             this.Controls.Add(this.CmdAccept);
@@ -206,5 +228,7 @@
         private System.Windows.Forms.Button CmdAccept;
         private System.Windows.Forms.Button CmdCancel;
         private System.Windows.Forms.Button CmdDelete;
+        private System.Windows.Forms.TextBox TxtAddress;
+        private System.Windows.Forms.Label label5;
     }
 }
