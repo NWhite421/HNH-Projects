@@ -49,3 +49,6 @@ E:\Source\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\zh-TW\MsgReader.resou
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.MainForm.resources
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.SubmitInfo.resources
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.Conflict.resources
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.Conflict.resources
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.SI_V2.resources
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.ChangeJobNumber.resources

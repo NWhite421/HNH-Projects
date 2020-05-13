@@ -28,6 +28,8 @@ namespace Email_Parser
                 Directory.CreateDirectory("C:\\temp");
             }
             MDG.Options.JobNumber.BaseDirectory = "Z:\\";
+            SI_V2 sI_V2 = new SI_V2(new List<string> { "99-01-001" }, new List<string> { "text.txt" }, "Nathan White", "Test File");
+            sI_V2.ShowDialog();
         }
 
         #region FILE HANDLERS
