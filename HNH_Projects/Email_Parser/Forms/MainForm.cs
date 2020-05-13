@@ -15,6 +15,7 @@ using System.Diagnostics;
 using MsgReader;
 using MsgReader.Outlook;
 using System.Xml;
+using System.Reflection;
 
 namespace Email_Parser
 {
@@ -28,6 +29,7 @@ namespace Email_Parser
                 Directory.CreateDirectory("C:\\temp");
             }
             MDG.Options.JobNumber.BaseDirectory = "Z:\\";
+            this.Text += " " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         #region FILE HANDLERS

@@ -107,6 +107,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FileExists";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File Already Exists";
             this.ResumeLayout(false);
             this.PerformLayout();

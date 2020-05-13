@@ -365,6 +365,9 @@ namespace Email_Parser
             {
                 SubmissionDetails.JobNumbers.Add(LbJobNumbers.GetItemText(LbJobNumbers.Items[i]));
             }
+            SubmissionDetails.Address = TxtAddress.Text;
+            SubmissionDetails.Purpose = TxtPurpose.Text;
+            SubmissionDetails.Sender = TxtFieldCrew.Text;
             ProcessJob(SubmissionDetails);
             this.DialogResult = DialogResult.OK;
             this.Close();

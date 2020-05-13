@@ -15,25 +15,25 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_2560BC0CF1C857ADEBB5C19D7B69212D"
-        "OwnerKey" = "8:_49B6F243478FBC3E89561C48BF84ED67"
+        "MsmKey" = "8:_18C1ECF438DFBEAAE06B8C901B667036"
+        "OwnerKey" = "8:_47EA903D4F06C4D240D35A14DB8549B6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2560BC0CF1C857ADEBB5C19D7B69212D"
+        "MsmKey" = "8:_18C1ECF438DFBEAAE06B8C901B667036"
         "OwnerKey" = "8:_59D6540C53384365BF3C9E5618FADACC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_49B6F243478FBC3E89561C48BF84ED67"
+        "MsmKey" = "8:_218F5703879D64F021BC7DF9ED8281D4"
         "OwnerKey" = "8:_59D6540C53384365BF3C9E5618FADACC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_570C52DCC9C1C4AEE670906DD365A547"
+        "MsmKey" = "8:_47EA903D4F06C4D240D35A14DB8549B6"
         "OwnerKey" = "8:_59D6540C53384365BF3C9E5618FADACC"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -45,13 +45,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9A702DFC2FE97068A4AA155309392D71"
-        "OwnerKey" = "8:_49B6F243478FBC3E89561C48BF84ED67"
+        "MsmKey" = "8:_B22FDBEC4A5CB03F15D9DE9042A4CA5E"
+        "OwnerKey" = "8:_47EA903D4F06C4D240D35A14DB8549B6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9A702DFC2FE97068A4AA155309392D71"
+        "MsmKey" = "8:_B22FDBEC4A5CB03F15D9DE9042A4CA5E"
         "OwnerKey" = "8:_59D6540C53384365BF3C9E5618FADACC"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -76,25 +76,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_49B6F243478FBC3E89561C48BF84ED67"
+        "OwnerKey" = "8:_47EA903D4F06C4D240D35A14DB8549B6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9A702DFC2FE97068A4AA155309392D71"
+        "OwnerKey" = "8:_18C1ECF438DFBEAAE06B8C901B667036"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2560BC0CF1C857ADEBB5C19D7B69212D"
+        "OwnerKey" = "8:_B22FDBEC4A5CB03F15D9DE9042A4CA5E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_570C52DCC9C1C4AEE670906DD365A547"
+        "OwnerKey" = "8:_218F5703879D64F021BC7DF9ED8281D4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -198,20 +198,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2560BC0CF1C857ADEBB5C19D7B69212D"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_18C1ECF438DFBEAAE06B8C901B667036"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:RtfPipe, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1b83b274d7d862f, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:OpenMcdf, Version=2.2.1.4, Culture=neutral, PublicKeyToken=fdbb1629d7c00800, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2560BC0CF1C857ADEBB5C19D7B69212D"
+                    "_18C1ECF438DFBEAAE06B8C901B667036"
                     {
-                    "Name" = "8:RtfPipe.dll"
+                    "Name" = "8:OpenMcdf.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:RtfPipe.dll"
+            "SourcePath" = "8:OpenMcdf.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_372C655B9B684A658060286106B07263"
@@ -229,45 +229,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_49B6F243478FBC3E89561C48BF84ED67"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MsgReader, Version=3.7.20.0, Culture=neutral, PublicKeyToken=3ba01cf3434959fa, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_49B6F243478FBC3E89561C48BF84ED67"
-                    {
-                    "Name" = "8:MsgReader.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:MsgReader.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_372C655B9B684A658060286106B07263"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_570C52DCC9C1C4AEE670906DD365A547"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_218F5703879D64F021BC7DF9ED8281D4"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:MDG.Core, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_570C52DCC9C1C4AEE670906DD365A547"
+                    "_218F5703879D64F021BC7DF9ED8281D4"
                     {
                     "Name" = "8:MDG.Core.dll"
                     "Attributes" = "3:512"
@@ -291,20 +260,51 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9A702DFC2FE97068A4AA155309392D71"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_47EA903D4F06C4D240D35A14DB8549B6"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:OpenMcdf, Version=2.2.1.4, Culture=neutral, PublicKeyToken=fdbb1629d7c00800, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:MsgReader, Version=3.7.20.0, Culture=neutral, PublicKeyToken=3ba01cf3434959fa, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_9A702DFC2FE97068A4AA155309392D71"
+                    "_47EA903D4F06C4D240D35A14DB8549B6"
                     {
-                    "Name" = "8:OpenMcdf.dll"
+                    "Name" = "8:MsgReader.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:OpenMcdf.dll"
+            "SourcePath" = "8:MsgReader.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_372C655B9B684A658060286106B07263"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B22FDBEC4A5CB03F15D9DE9042A4CA5E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:RtfPipe, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1b83b274d7d862f, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_B22FDBEC4A5CB03F15D9DE9042A4CA5E"
+                    {
+                    "Name" = "8:RtfPipe.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:RtfPipe.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_372C655B9B684A658060286106B07263"
@@ -439,16 +439,16 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Setup"
-        "ProductCode" = "8:{A3F21B13-6B0B-411A-9803-5E5AB37C8FEF}"
-        "PackageCode" = "8:{A9A99161-C34A-4848-AB29-AA6CFE669C8B}"
+        "ProductName" = "8:EMail Parser"
+        "ProductCode" = "8:{605AC560-A4F3-4408-80A0-E56C6D518FBC}"
+        "PackageCode" = "8:{D11176E6-BECD-4F86-9476-9C7A86D412CF}"
         "UpgradeCode" = "8:{7952335E-F324-4144-9E0F-941975F7ECFC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.1.0"
         "Manufacturer" = "8:Melbourne Design Group"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -990,7 +990,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_59D6540C53384365BF3C9E5618FADACC"
             {
-            "SourcePath" = "8:..\\Email_Parser\\obj\\Release\\Email_Parser.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_372C655B9B684A658060286106B07263"

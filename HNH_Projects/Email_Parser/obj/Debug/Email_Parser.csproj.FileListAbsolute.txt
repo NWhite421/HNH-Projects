@@ -13,10 +13,8 @@ C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Pars
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\Email_Parser.exe
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\Email_Parser.pdb
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\bin\Debug\MDG.Core.dll
-C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csprojAssemblyReference.cache
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.MainForm.resources
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.Properties.Resources.resources
-C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.SubmitInfo.resources
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.GenerateResource.cache
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.csproj.CopyComplete
 C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.exe
@@ -54,3 +52,4 @@ C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Pars
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.ChangeJobNumber.resources
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.SI_V2.resources
 E:\Source\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.FileExists.resources
+C:\Users\Nathan White\Documents\Source Code\HNH-Projects\HNH_Projects\Email_Parser\obj\Debug\Email_Parser.FileExists.resources
